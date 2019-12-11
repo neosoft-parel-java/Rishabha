@@ -1,0 +1,282 @@
+						-----------***REDIS***-----------
+1) What is Redis?
+--> REDIS (REmote DIctionary Server) is an advanced key-value store that can function as a NoSQL database or as a memory-cache store to improve performance when serving data that is stored in system memory.
+
+2) Why REDIS/Its Features ?
+--> 
+**Speed: 
+	-It is in-memory data-source
+	-It supports Pipelining of commands and facilitates you to use multiple values in a single command to speed up communication with the 		client libraries. 
+
+**Persistence: 
+	-While all the data lives in memory, changes are asynchronously saved on disk using flexible policies based on elapsed time and/or number of updates since last save.
+
+**Master/Slave Replication: 
+	-Redis follows a very simple and fast Master/Slave replication.
+
+**Sharding: 
+	-Redis supports sharding. It is very easy to distribute the dataset across multiple Redis instances.
+
+3) Installation: (https://redis.io/download)
+
+--UBUNTU:(Root user)
+	a) Download, extract and compile Redis with:
+
+$ wget http://download.redis.io/releases/redis-5.0.7.tar.gz      /*see the latest stable version in above link*/
+$ tar xzf redis-5.0.7.tar.gz
+$ cd redis-5.0.7
+$ make
+The binaries that are now compiled are available in the src directory.
+
+	b) Run Redis with:
+
+$ src/redis-server
+
+	c)You can interact with Redis using the built-in client:
+
+$ src/redis-cli
+redis> set foo bar
+OK
+redis> get foo
+"bar"
+
+	d) To access redis server/client from any where:
+$ make install
+
+
+4)Common Commands in Redis:
+
+-To update configuration:  $ CONFIG SET [CONFIG_SETTING_NAME] [NEW_CONFIG_VALUE]
+ex.  127.0.0.1:6379> CONFIG SET loglevel "loglevel"
+
+-To check configuration: $ CONFIG GET [CONFIG_SETTING_NAME]
+ex.  127.0.0.1:6379> config get loglevel
+op.:1) "loglevel"
+
+
+
+5) Data Types in Redis:
+	
+**Strings : Can store upto 512 megabytes in one string.
+
+--To set string: SET [KEY] [VALUE]
+ex. 127.0.0.1:6379> SET name "Rishabh"  
+
+--To get string: GET [KEY]
+ex. 127.0.0.1:6379> GET name
+op.:"Rishabh"  
+
+--To delete the key:DEL [key]
+This command deletes the key, if it exists returns the number of values deleted else 0.
+ex. 127.0.0.1:6379> del name
+op.:(integer) 1
+
+--To Get KEYS matching pattern:KEYS [pattern]
+Returns all keys matching pattern.
+ex. 127.0.0.1:6379> KEYS n*
+op.:1) "name"
+
+--To delete all the keys: FLUSHALL 
+ex.127.0.0.1:6379> FLUSHALL
+op.:OK
+
+Some more commands:
+-SETEX key seconds value
+-->Sets the value with the expiry of a key
+
+-SETNX key value
+-->Sets the value of a key, only if the key does not exist
+
+-SETRANGE key offset value
+-->Overwrites the part of a string at the key starting at the specified offset
+
+-STRLEN key
+-->Gets the length of the value stored in a key
+
+-MSET key value [key value ...]
+-->Sets multiple keys to multiple values
+
+-MSETNX key value [key value ...]
+-->Sets multiple keys to multiple values, only if none of the keys exist
+
+-PSETEX key milliseconds value
+-->Sets the value and expiration in milliseconds of a key
+
+-INCR key
+-->Increments the integer value of a key by one
+
+-INCRBY key increment
+-->Increments the integer value of a key by the given amount
+
+-INCRBYFLOAT key increment
+-->Increments the float value of a key by the given amount
+
+-DECR key
+-->Decrements the integer value of a key by one
+
+-DECRBY key decrement
+-->Decrements the integer value of a key by the given number
+
+-APPEND key value
+-->Appends a value to a key
+
+
+** Hashes : In Redis, hashes are maps between string fields and string values. So, they are used to represent objects.Every hash can store up to 2^(32 - 1) field-value pairs (more than 4 billion).
+
+-HDEL key field [field ...]
+-->Delete one or more hash fields
+
+-HEXISTS key field
+-->Determine if a hash field exists
+
+-HGET key field
+-->Get the value of a hash field
+
+-HGETALL key
+-->Get all the fields and values in a hash
+
+-HINCRBY key field increment
+-->Increment the integer value of a hash field by the given number
+
+-HINCRBYFLOAT key field increment
+-->Increment the float value of a hash field by the given amount
+
+-HKEYS key
+-->Get all the fields in a hash
+
+-HLEN key
+-->Get the number of fields in a hash
+
+-HMGET key field [field ...]
+-->Get the values of all the given hash fields
+
+-HMSET key field value [field value ...]
+-->Set multiple hash fields to multiple values
+
+-HSET key field value
+-->Set the string value of a hash field
+
+-HSETNX key field value
+-->Set the value of a hash field, only if the field does not exist
+
+-HSTRLEN key field
+-->Get the length of the value of a hash field
+
+-HVALS key
+-->Get all the values in a hash
+
+**List: Redis Lists are defined as a zero-indexed lists of strings, sorted by insertion order.You can add elements to a Redis List on the head or on the tail. The max length of a list is 2^(32 - 1) elements.
+
+-LINDEX key index
+-->Get an element from a list by its index
+
+-LINSERT key BEFORE|AFTER pivot value
+-->Insert an element before or after another element in a list
+
+-LLEN key
+-->Get the length of a list
+
+-LPOP key
+-->Remove and get the first element in a list
+
+-LPUSH key value [value ...]
+-->Prepend one or multiple values to a list
+
+-LPUSHX key value
+-->Prepend a value to a list, only if the list exists
+
+-LRANGE key start stop
+-->Get a range of elements from a list
+
+-LSET key index value
+-->Set the value of an element in a list by its index
+
+-LTRIM key start stop
+-->Trim a list to the specified range
+
+-RPOP key
+-->Remove and get the last element in a list
+
+-RPUSH key value [value ...]
+-->Append one or multiple values to a list
+
+-RPUSHX key value
+-->Append a value to a list, only if the list exists
+
+
+**Sets: Sets are an unordered collection of unique strings in Redis. In Redis, you can add, remove, and test for the existence of members in O(1) time complexity. The max length of a list is 2^(32 - 1) elements.
+
+-SADD key member [member ...]
+-->Add one or more members to a set
+
+-SCARD key
+-->Get the number of members in a set
+
+-SDIFF key [key ...]
+-->Subtract multiple sets
+
+-SDIFFSTORE destination key [key ...]
+-->Subtract multiple sets and store the resulting set in a key
+
+-SINTER key [key ...]
+-->Intersect multiple sets
+
+-SINTERSTORE destination key [key ...]
+-->Intersect multiple sets and store the resulting set in a key
+
+-SISMEMBER key member
+-->Determine if a given value is a member of a set returns 1 if present else 0.
+
+-SMEMBERS key
+-->Get all the members in a set
+
+-SMOVE source destination member
+-->Move a member from one set to another
+
+-SPOP key [count]
+-->Remove and return one or multiple random members from a set
+
+-SRANDMEMBER key [count]
+-->Get one or multiple random members from a set
+
+-SREM key member [member ...]
+-->Remove one or more members from a set
+
+-SUNION key [key ...]
+-->Add multiple sets
+
+-SUNIONSTORE destination key [key ...]
+-->Add multiple sets and store the resulting set in a key.
+
+
+** Sorted sets: They are also a set of non-repeating collections of Strings. But every member of a Sorted Set is associated with a score, that is used in order to take the sorted set ordered, from the smallest to the greatest score. While members are unique, the scores may be repeated.
+
+-ZADD key score member [score member …] 
+-->Adds members with the given scores to the sorted set
+
+-ZREM key member [member …] 
+-->Removes the members from the sorted set, returning the number of members that were removed.
+
+-ZCARD key 
+-->Returns the number of members in the sorted set.
+
+-ZINCRBY key increment member 
+-->Increments the member in the sorted set
+
+-ZCOUNT key min max 
+-->Returns the number of members with scores between the provided minimum and maximum
+
+-ZSCORE key member 
+-->Returns the score of the member in the sorted set.
+
+-ZRANGE key start stop [WITHSCORES] 
+-->Returns the members and optionally the scores for the members with ranks between start and stop
+
+
+
+
+
+
+
+
+
