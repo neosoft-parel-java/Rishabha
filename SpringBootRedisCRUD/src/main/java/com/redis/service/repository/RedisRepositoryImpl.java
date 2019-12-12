@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.redis.service.exception.RedisException;
 import com.redis.service.model.Student;
 
 @Repository
@@ -38,8 +39,11 @@ public class RedisRepositoryImpl implements RedisRepository {
 
 	/**
 	 * Delete a student in Redis.
+	 * 
+	 * @throws RedisException
 	 */
 	public void delete(String id) {
+
 		hashOperations.delete(KEY, id);
 	}
 

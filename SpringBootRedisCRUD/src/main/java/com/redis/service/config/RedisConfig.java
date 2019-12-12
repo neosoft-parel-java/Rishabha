@@ -29,9 +29,11 @@ public class RedisConfig {
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
 
-		// To connect to as different host and port
+		/* To connect to a different host and port */
+		// JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();		
 		// jedisConFactory.setHostName(hostName);
 		// jedisConFactory.setPort(port);
+		// return jedisConFactory;
 
 		return new JedisConnectionFactory();
 	}

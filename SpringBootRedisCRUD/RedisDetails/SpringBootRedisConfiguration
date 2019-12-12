@@ -1,0 +1,65 @@
+RedisSpringData Configuration with SpringBoot:
+
+1) Adding Redis dependency to pom.xml:  
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+2) Redis Configuration:
+-To define the connection settings between the application client and the Redis server instance, we need to use a Redis client.
+
+-For enabling Spring Data Redis repository, we need to have a configuration class that must be annotated with @Configuration and @EnableRedisRepositories.
+
+-JedisConnectionFactory: This is the connection factory for the Jedis base connection. It uses the JedisClientConfiguration and RedisStandaloneConfiguration.
+
+	@Bean
+	JedisConnectionFactory jedisConnectionFactory() {
+
+		/* To connect to a different host and port */
+		// JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();		
+		// jedisConFactory.setHostName(hostName);
+		// jedisConFactory.setPort(port);
+		// return jedisConFactory;
+
+		return new JedisConnectionFactory();
+	}
+
+-RedisTemplate<K,V>: This helper simplifies data access for Redis. It uses automatic serialization and deserialization for a given object and underlying binary data in the Redis store.
+
+	@Bean
+	public RedisTemplate<String, Student> redisTemplate() {
+		final RedisTemplate<String, Student> template = new RedisTemplate<>();
+		template.setConnectionFactory(jedisConnectionFactory());
+		template.setValueSerializer(new GenericToStringSerializer<Student>(Student.class));
+		return template;
+	}
+
+3)Entity that implements Serializable:
+
+4)Creating Redis Repository:
+-RedisTemplate provides many methods in order to perform an operation for multiple data structures.
+-Some methods:
+    opsForHash(): Return the HashOperations<K,HK,HV> class. This class use for hash operations on Redis.
+
+    opsForList(): Return the ListOperations<K,V> used for list operations.
+
+    opsForValue(): Return the ValueOperations<K,V> Perform simple key value operations; each key will have an entry in Redis for its associated value
+
+	@Repository
+	public class RedisRepositoryImpl implements RedisRepository {
+
+		private RedisTemplate<String, Student> redisTemplate;
+		private HashOperations<String, String, Student> hashOperations;
+
+		@Autowired
+		public RedisRepositoryImpl(RedisTemplate<String, Student> redisTemplate) {
+			this.redisTemplate = redisTemplate;
+			hashOperations = this.redisTemplate.opsForHash();
+		}
+		
+	Crud operations ...
+	
+	}
+
+
